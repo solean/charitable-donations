@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -6,6 +5,7 @@ import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import PledgeList from './components/PledgeList/PledgeList';
 
 
 const { chains, provider } = configureChains(
@@ -29,25 +29,24 @@ const wagmiClient = createClient({
 
 
 function App() {
+
   return (
     <WagmiConfig client={ wagmiClient }>
-      <RainbowKitProvider chains={ chains }>
+      <RainbowKitProvider chains={ chains } showRecentTransactions={ true }>
         <div className="App">
-          <ConnectButton />
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              Edit <code>src/App.js</code> and save to reload.
-            </p>
-            <a
-              className="App-link"
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
-          </header>
+          <div style={{ margin: '10px' }}>
+            <h1 className='headerTitle'>hakuai 博愛</h1>
+            <div style={{ float: 'right' }}>
+              <ConnectButton />
+            </div>
+          </div>
+          <div>
+            <div className='landing'>
+                Pledge your ETH to a good cause,<br />
+                and motivate others to do the same.
+            </div>
+            <PledgeList provider={ provider } />
+          </div>
         </div>
       </RainbowKitProvider>
     </WagmiConfig>

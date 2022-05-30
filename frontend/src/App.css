@@ -1,38 +1,63 @@
+
 .App {
-  text-align: center;
+  font-family: 'Poppins', sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.headerTitle {
+  display: inline-block;
+  color: #6512ff;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
+.landing {
+  color: white;
+  height: 50vh;
+  font-weight: bold;
+  font-size: 64px;
+  background: rgb(131,102,255);
+  background: linear-gradient(29deg, rgba(131,102,255,1) 0%, rgba(102,201,254,1) 50%, rgba(255,250,117,1) 100%);
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.pledgeCard {
+  width: 500px;
+  margin: 20px;
+}
+.pledgeCard:hover {
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid rgb(229, 232, 235);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.pledgeCardImageContainer {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.pledgeCardInfoContainer {
+  display: inline-block;
+}
+
+.pledgeCardCharityName {
+  font-weight: bold;
+}
+
+.pledgeAmounts {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.ethAmount {
+  margin: 0 5px;
+}
+
+.pledgeCardRaisedContainer {
+  float: right;
+  font-weight: 500;
+}
+
+.pledgeCardProgressBarContainer {
+  color: rgb(52, 199, 123);
 }
