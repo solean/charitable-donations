@@ -7,6 +7,13 @@ contract CharitableDonations is Ownable {
 
   address _owner;
   
+  struct Charity {
+    address addr;
+    string name;
+    string description;
+    string websiteUrl;
+    string imageUrl;
+  }
   struct Pledge {
     uint256 id;
     address creator;
@@ -17,20 +24,26 @@ contract CharitableDonations is Ownable {
     uint256 duration;
     uint256 endedAt;
     address charityAddress;
+    bool isVerified;
+    Charity charity;
   }
+
 
   uint256 pledgeCounter = 1;
   // uint256 totalRaised = 0;
-  mapping (uint256 => Pledge) pledges;
+  mapping (uint256 => Pledge) public pledges;
+  Pledge[] pledgeArray;
   // mapping (address => Pledge[] memory) pledgesContributedTo;
 
   // Pledge id => (address => amount contributed)
   mapping (uint256 => mapping (address => uint256)) pledgeContributions;
+  mapping (address => Charity) public verifiedCharities;
 
   event PledgeCreated(Pledge pledge);
   event PledgeContribution(uint256 pledgeId, address contributor, uint256 amount);
   event PledgeEnded(uint256 pledgeId, uint256 timestamp);
   event Withdrawal(uint256 pledgeId, address contributor, uint256 amount);
+  event CharityCreated(address addr, string name, string websiteUrl, string imageUrl);
 
 
   constructor () {
@@ -40,10 +53,14 @@ contract CharitableDonations is Ownable {
   function createPledge(uint256 initialPledge, uint256 goalAmount, uint256 duration, address charityAddress) public payable {
     require(initialPledge == msg.value && msg.value > 0, "Pledge must be greater than 0");
     require(goalAmount > initialPledge, "Goal amount must be greater than the initial pledge");
-    // TODO: minimum duration?
-    require(duration > 0, "Duration must be greater than 0");
-    // require(charityAddress != address(0), "Charity address cannot be 0");
+    require(duration >= 3600000, "Duration must be at least 1 hour");
+    require(charityAddress != address(0), "Charity address cannot be 0");
 
+    bool isVerified = false;
+    Charity memory charity = verifiedCharities[charityAddress];
+    if (charity.addr == charityAddress) {
+      isVerified = true;
+    }
 
     Pledge memory pledge = Pledge(
       pledgeCounter,
@@ -54,9 +71,12 @@ contract CharitableDonations is Ownable {
       initialPledge,
       duration,
       0,
-      charityAddress
+      charityAddress,
+      isVerified,
+      charity
     );
     pledges[pledgeCounter] = pledge;
+    pledgeArray.push(pledge);
 
     pledgeContributions[pledgeCounter][msg.sender] = initialPledge;
 
@@ -67,6 +87,10 @@ contract CharitableDonations is Ownable {
 
   function getPledge(uint256 pledge) public view returns (Pledge memory) {
     return pledges[pledge];
+  }
+
+  function getPledges() public view returns (Pledge[] memory) {
+    return pledgeArray;
   }
 
   function contributeToPledge(uint256 pledgeId, uint256 amount) public payable {
@@ -108,8 +132,20 @@ contract CharitableDonations is Ownable {
     pledgeContributions[pledgeId][msg.sender] = 0;
     addr.transfer(contributed);
 
-    // TODO: emit event
     emit Withdrawal(pledgeId, msg.sender, contributed);
+  }
+
+  function createVerifiedCharity(string calldata name, string calldata description, string calldata websiteUrl, string calldata imageUrl, address addr) public onlyOwner {
+    Charity memory charity = Charity(
+      addr,
+      name,
+      description,
+      websiteUrl,
+      imageUrl
+    );
+    verifiedCharities[addr] = charity;
+
+    emit CharityCreated(addr, name, websiteUrl, imageUrl);
   }
 
 }
