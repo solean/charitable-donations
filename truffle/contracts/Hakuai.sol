@@ -135,8 +135,11 @@ contract Hakuai is Ownable {
     emit Withdrawal(pledgeId, msg.sender, contributed);
   }
 
-  function createVerifiedCharity(string calldata name, string calldata description, string calldata websiteUrl, string calldata imageUrl, address addr) public onlyOwner {
-    require(name.length && websiteUrl.length, "Charity name and website URL are required params");
+  function createVerifiedCharity(string calldata name, string calldata description,
+      string calldata websiteUrl, string calldata imageUrl, address addr) public onlyOwner {
+
+    require(bytes(name).length > 0, "Charity name is a required param");
+    require(bytes(websiteUrl).length > 0, "Website URL is a required param");
     require(addr != address(0), "Address is required");
 
     Charity memory charity = Charity(
