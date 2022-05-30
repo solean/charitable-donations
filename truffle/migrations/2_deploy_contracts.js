@@ -1,5 +1,5 @@
-const CharitableDonations = artifacts.require("CharitableDonations");
+const Hakuai = artifacts.require("Hakuai");
 
 module.exports = function (deployer) {
-  deployer.deploy(CharitableDonations);
+  deployer.deploy(Hakuai);
 };

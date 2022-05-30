@@ -162,13 +162,13 @@
 								"type": "string"
 							}
 						],
-						"internalType": "struct CharitableDonations.Charity",
+						"internalType": "struct Hakuai.Charity",
 						"name": "charity",
 						"type": "tuple"
 					}
 				],
 				"indexed": false,
-				"internalType": "struct CharitableDonations.Pledge",
+				"internalType": "struct Hakuai.Pledge",
 				"name": "pledge",
 				"type": "tuple"
 			}
@@ -402,12 +402,12 @@
 								"type": "string"
 							}
 						],
-						"internalType": "struct CharitableDonations.Charity",
+						"internalType": "struct Hakuai.Charity",
 						"name": "charity",
 						"type": "tuple"
 					}
 				],
-				"internalType": "struct CharitableDonations.Pledge",
+				"internalType": "struct Hakuai.Pledge",
 				"name": "",
 				"type": "tuple"
 			}
@@ -499,12 +499,12 @@
 								"type": "string"
 							}
 						],
-						"internalType": "struct CharitableDonations.Charity",
+						"internalType": "struct Hakuai.Charity",
 						"name": "charity",
 						"type": "tuple"
 					}
 				],
-				"internalType": "struct CharitableDonations.Pledge[]",
+				"internalType": "struct Hakuai.Pledge[]",
 				"name": "",
 				"type": "tuple[]"
 			}
@@ -613,7 +613,7 @@
 						"type": "string"
 					}
 				],
-				"internalType": "struct CharitableDonations.Charity",
+				"internalType": "struct Hakuai.Charity",
 				"name": "charity",
 				"type": "tuple"
 			}

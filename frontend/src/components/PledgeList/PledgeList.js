@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import CharitableDonationsAbi from '../../abis/CharitableDonations.json';
+import HakuaiAbi from '../../abis/Hakuai.json';
 import PledgeCard from '../PledgeCard.js/PledgeCard';
 import { ethers } from 'ethers';
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
-const contract = new ethers.Contract('0x9565c7934fF9a31FD91D7fa861DD8942AdCD296c', CharitableDonationsAbi, provider);
+const contract = new ethers.Contract('0x9565c7934fF9a31FD91D7fa861DD8942AdCD296c', HakuaiAbi, provider);
 
 class PledgeList extends Component {
 

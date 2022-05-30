@@ -1,18 +1,18 @@
 
-const CharitableDonations = artifacts.require('CharitableDonations');
+const Hakuai = artifacts.require('Hakuai');
 
 module.exports = async function(callback) {
   let accounts = await web3.eth.getAccounts();
-  let cd = await CharitableDonations.deployed();
+  let h = await Hakuai.deployed();
 
-  await cd.createVerifiedCharity(
+  await h.createVerifiedCharity(
     'Charity Name',
     'charity description',
     'http://google.com',
     'https://opensea.io/static/images/logos/opensea.svg',
     accounts[9]
   );
-  await cd.createVerifiedCharity(
+  await h.createVerifiedCharity(
     'Cystic Fibrosis Foundation',
     'CFF is a non-profit organization dedicated to the prevention and treatment of cystic fibrosis.',
     'https://cff.org/',
@@ -20,7 +20,7 @@ module.exports = async function(callback) {
     accounts[8]
   );
 
-  await cd.createPledge(
+  await h.createPledge(
     web3.utils.toWei('0.1'),
     web3.utils.toWei('1'),
     3600000,
@@ -30,7 +30,7 @@ module.exports = async function(callback) {
       value: web3.utils.toWei('0.1')
     }
   );
-  await cd.createPledge(
+  await h.createPledge(
     web3.utils.toWei('10'),
     web3.utils.toWei('100'),
     36000000,
