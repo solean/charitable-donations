@@ -30,14 +30,13 @@ contract Hakuai is Ownable {
 
 
   uint256 pledgeCounter = 1;
-  // uint256 totalRaised = 0;
+  uint256 public totalClaimedByCharities = 0;
   mapping (uint256 => Pledge) public pledges;
   Pledge[] pledgeArray;
-  // mapping (address => Pledge[] memory) pledgesContributedTo;
-
-  // Pledge id => (address => amount contributed)
+  mapping (address => uint256[]) public pledgesContributedTo;
   mapping (uint256 => mapping (address => uint256)) pledgeContributions;
   mapping (address => Charity) public verifiedCharities;
+  Charity[] verifiedCharityArray;
 
   event PledgeCreated(Pledge pledge);
   event PledgeContribution(uint256 pledgeId, address contributor, uint256 amount);
@@ -79,6 +78,7 @@ contract Hakuai is Ownable {
     pledgeArray.push(pledge);
 
     pledgeContributions[pledgeCounter][msg.sender] = initialPledge;
+    pledgesContributedTo[msg.sender].push(pledgeCounter);
 
     pledgeCounter++;
 
@@ -98,23 +98,27 @@ contract Hakuai is Ownable {
 
     Pledge memory pledge = pledges[pledgeId];
 
-    // require(pledge != 0, "Pledge does not exist");
+    require(pledge.charityAddress != address(0), "Pledge does not exist");
     require(pledge.endedAt == 0, "Pledge has ended");
 
     pledge.raisedAmount += amount;
 
     pledgeContributions[pledgeId][msg.sender] += amount;
+    pledgesContributedTo[msg.sender].push(pledgeId);
 
     emit PledgeContribution(pledgeId, msg.sender, amount);
+  }
+
+  function howMuchDidIContribute(uint256 pledgeId) public view returns (uint256) {
+    return pledgeContributions[pledgeId][msg.sender];
   }
 
   function endPledge(uint256 pledgeId) public {
     Pledge memory pledge = pledges[pledgeId];
 
-    // require(pledge != 0, "Pledge does not exist");
+    require(pledge.charityAddress != address(0), "Pledge does not exist");
     require(pledge.endedAt == 0, "Pledge has already ended");
     require(block.timestamp >= pledge.createdAt + pledge.duration, "Pledge has not ended yet");
-    // require(pledge.raisedAmount >= pledge.goalAmount, "Pledge has not reached goal amount");
 
     pledge.endedAt = block.timestamp;
     pledges[pledgeId] = pledge;
@@ -124,15 +128,27 @@ contract Hakuai is Ownable {
 
   function withdraw(uint256 pledgeId, address payable addr) public {
     Pledge memory pledge = pledges[pledgeId];
-    // require(pledge != 0, "Pledge does not exist");
+    require(pledge.charityAddress != address(0), "Pledge does not exist");
     require(pledge.endedAt != 0, "Pledge has not ended");
     require(msg.sender == addr, "Sender must be the address of the beneficiary");
+    require(pledge.raisedAmount < pledge.goalAmount, "Pledge has reached goal amount, cannot withdraw. Funds are only withdrawable by the charity.");
 
     uint256 contributed = pledgeContributions[pledgeId][msg.sender];
     pledgeContributions[pledgeId][msg.sender] = 0;
     addr.transfer(contributed);
 
     emit Withdrawal(pledgeId, msg.sender, contributed);
+  }
+
+  function withdrawForCharity(uint256 pledgeId) public {
+    Pledge memory pledge = pledges[pledgeId];
+    require(pledge.charityAddress != address(0), "Pledge does not exist");
+    require(pledge.endedAt != 0, "Pledge has not ended");
+    require(pledge.raisedAmount >= pledge.goalAmount, "Pledge has not reached goal amount.");
+
+    address payable charityAddress = payable(pledge.charityAddress);
+    totalClaimedByCharities += pledge.raisedAmount;
+    charityAddress.transfer(pledge.raisedAmount);
   }
 
   function createVerifiedCharity(string calldata name, string calldata description,
@@ -152,6 +168,14 @@ contract Hakuai is Ownable {
     verifiedCharities[addr] = charity;
 
     emit CharityCreated(addr, name, websiteUrl, imageUrl);
+  }
+
+  function getVerifiedCharity(address addr) public view returns (Charity memory) {
+    return verifiedCharities[addr];
+  }
+
+  function getVerifiedCharities() public view returns (Charity[] memory) {
+    return verifiedCharityArray;
   }
 
 }
