@@ -5,12 +5,21 @@ import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import LandingPage from './components/LandingPage/LandingPage';
-import PledgeList from './components/PledgeList/PledgeList';
+import AppContainer from './components/AppContainer/AppContainer';
+import { ethers } from 'ethers';
+import HakuaiAbi from './abis/Hakuai.json';
 
+
+const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
+const contract = new ethers.Contract('0x7102E83ACcc5a8c57289677aF10a8740748BA6f1', HakuaiAbi, ethersProvider);
+
+console.log(process.env.INFURA_ID)
+
+// TODO: rinkeby, remove arb
+let chainConfig = process.env.NODE_ENV === 'development' ? [chain.localhost, chain.arbitrum] : [chain.mainnet];
 
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.optimism, chain.arbitrum, chain.localhost],
+  chainConfig,
   [
     infuraProvider({ infuraId: process.env.INFURA_ID }),
     publicProvider()
@@ -41,8 +50,9 @@ function App() {
             </div>
           </div>
           <div>
-            <LandingPage />
-            <PledgeList provider={ provider } />
+            <AppContainer
+              provider={ ethersProvider }
+              contract={ contract } />
           </div>
         </div>
       </RainbowKitProvider>

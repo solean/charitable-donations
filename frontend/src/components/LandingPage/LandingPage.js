@@ -5,16 +5,13 @@ class LandingPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      showCreatePledgeForm: false
-    };
-
-    this.handleCreatePledgeClick = this.handleCreatePledgeClick.bind(this);
+    this.onCreatePledgeSubmit = this.onCreatePledgeSubmit.bind(this);
   }
 
-  handleCreatePledgeClick() {
-    this.setState({ showCreatePledgeForm: true });
+  onCreatePledgeSubmit() {
+    this.props.refreshPledges && this.props.refreshPledges();
   }
+
 
   render() {
     return (
@@ -38,7 +35,10 @@ class LandingPage extends Component {
                 <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
               </div>
               <div className='modal-body'>
-                <CreatePledgeForm />
+                <CreatePledgeForm
+                  onSubmit={ this.onCreatePledgeSubmit }
+                  provider={ this.props.provider }
+                  contract={ this.props.contract } />
               </div>
             </div>
           </div>

@@ -1,25 +1,8 @@
 import React, { Component } from 'react';
-import HakuaiAbi from '../../abis/Hakuai.json';
 import PledgeCard from '../PledgeCard.js/PledgeCard';
 import { ethers } from 'ethers';
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
-const contract = new ethers.Contract('0x9565c7934fF9a31FD91D7fa861DD8942AdCD296c', HakuaiAbi, provider);
-
 class PledgeList extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      pledges: []
-    };
-  }
-
-  async componentDidMount() {
-    const pledges = await contract.getPledges();
-    this.setState({ pledges });
-  }
 
   parsePledge(pledge) {
     let parsed = {};
@@ -50,15 +33,21 @@ class PledgeList extends Component {
   }
 
   render() {
+    let pledges = this.props.pledges || [];
+    pledges = pledges.map(pledge => this.parsePledge(pledge));
+    pledges.reverse();
 
     return (
-      <div className='container-fluid'>
-        <h2>Contribute to an Open Pledge</h2>
-        <div>
-          {this.state.pledges.map((pledge, index) => {
-            let parsed = this.parsePledge(pledge);
-            return <PledgeCard key={index} pledge={parsed} />
-          })}
+      <div className='container-fluid' style={{ padding: '20px' }}>
+        <div className='d-flex justify-content-center'>
+          <div>
+            <h2 style={{ fontWeight: 'bold', textAlign: 'center' }}>Contribute to an Open Pledge</h2>
+            <div>
+              {pledges.map((pledge, index) => {
+                return <PledgeCard key={index} pledge={pledge} />
+              })}
+            </div>
+          </div>
         </div>
       </div>
     );
