@@ -53,7 +53,7 @@ class PledgeList extends Component {
 
     return (
       <div className='container-fluid'>
-        <h1>Open Pledges</h1>
+        <h2>Contribute to an Open Pledge</h2>
         <div>
           {this.state.pledges.map((pledge, index) => {
             let parsed = this.parsePledge(pledge);

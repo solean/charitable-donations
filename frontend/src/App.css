@@ -17,8 +17,20 @@
   background: linear-gradient(29deg, rgba(131,102,255,1) 0%, rgba(102,201,254,1) 50%, rgba(255,250,117,1) 100%);
 
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.landing button.btn-light {
+  color: #6512ff;
+  font-weight: 500;
+}
+
+.modal button.btn-primary {
+  background-color: #6512ff;
+  color: white;
+  font-weight: 500;
 }
 
 .pledgeCard {
@@ -27,8 +39,7 @@
 }
 .pledgeCard:hover {
   cursor: pointer;
-  border-radius: 10px;
-  border: 1px solid rgb(229, 232, 235);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 
 .pledgeCardImageContainer {

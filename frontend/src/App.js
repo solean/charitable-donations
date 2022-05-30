@@ -5,6 +5,7 @@ import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import LandingPage from './components/LandingPage/LandingPage';
 import PledgeList from './components/PledgeList/PledgeList';
 
 
@@ -29,7 +30,6 @@ const wagmiClient = createClient({
 
 
 function App() {
-
   return (
     <WagmiConfig client={ wagmiClient }>
       <RainbowKitProvider chains={ chains } showRecentTransactions={ true }>
@@ -41,10 +41,7 @@ function App() {
             </div>
           </div>
           <div>
-            <div className='landing'>
-                Pledge your ETH to a good cause,<br />
-                and motivate others to do the same.
-            </div>
+            <LandingPage />
             <PledgeList provider={ provider } />
           </div>
         </div>
