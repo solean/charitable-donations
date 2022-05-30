@@ -136,6 +136,9 @@ contract Hakuai is Ownable {
   }
 
   function createVerifiedCharity(string calldata name, string calldata description, string calldata websiteUrl, string calldata imageUrl, address addr) public onlyOwner {
+    require(name.length && websiteUrl.length, "Charity name and website URL are required params");
+    require(addr != address(0), "Address is required");
+
     Charity memory charity = Charity(
       addr,
       name,
