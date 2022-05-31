@@ -22,7 +22,8 @@ _________________
 
 #### Immediate todos:
 - an "account" page where you can view pledges created, contributed to, and other account-based statistics
-- a more polished UI
+- mobile support
+- more polished UI
 - social media sharing
 
 #### Higher-level thoughts:
