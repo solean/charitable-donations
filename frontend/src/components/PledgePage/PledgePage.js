@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import ContributeForm from '../ContributeForm/ContributeForm';
 import { Link, useParams } from 'react-router-dom';
 import utils from '../../utils/utils';
-import constants from '../../constants/constants';
-import HakuaiAbi from '../../abis/Hakuai.json';
 import { ethers } from 'ethers'
-import { useAccount, useContractRead } from 'wagmi';
+import { useAccount } from 'wagmi';
 import moment from 'moment';
 
 
@@ -68,11 +66,33 @@ class PledgePageInner extends Component {
       let tx = await contract.endPledge(this.state.pledge.id);
       console.log(tx);
       await tx.wait();
-      // this.props.onSubmit && this.props.onSubmit();
+      await this.loadPledgeData();
     } catch (e) {
       console.error(e);
-      // let errorMessage = (e && e.data && e.data.message) || 'Sorry, something went wrong.';
-      // this.setState({ errorMessage });
+    }
+  }
+
+  async withdraw() {
+    try {
+      let contract = this.props.contract.connect(this.props.provider.getSigner());
+      let tx = await contract.withdraw(this.state.pledge.id);
+      console.log(tx);
+      await tx.wait();
+      await this.loadPledgeData();
+    } catch (e) {
+      console.error(e);
+    }
+  }  
+
+  async withdrawForCharity() {
+    try {
+      let contract = this.props.contract.connect(this.props.provider.getSigner());
+      let tx = await contract.withdrawForCharity(this.state.pledge.id);
+      console.log(tx);
+      await tx.wait();
+      await this.loadPledgeData();
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -88,11 +108,19 @@ class PledgePageInner extends Component {
 
     let end = moment((pledge.createdAt * 1000) + pledge.duration);
     let canPledgeBeEnded = false;
+
+    let wasGoalMet = false;
+    if (pledge && pledge.raisedAmount) {
+      wasGoalMet = ethers.utils.parseEther(pledge.raisedAmount) >= ethers.utils.parseEther(pledge.goalAmount);
+    }
+
     if (pledge.endedAt) {
       canPledgeBeEnded = false;
     } else if (end.isBefore()) {
       canPledgeBeEnded = true;
     }
+    // TODO: temp
+    // canPledgeBeEnded = true;
 
 
     return (
@@ -108,22 +136,43 @@ class PledgePageInner extends Component {
               <div style={{ marginTop: '20px', fontWeight: '500' }}>
                 <div style={{ marginBottom: '10px' }}>
                   <img height="64" width="64" src={ imageUrl } alt="profile" />
-                  <h3 style={{ marginLeft: '10px', display: 'inline-block', fontWeight: 'bold', fontSize: '32px' }}>{ charityLabel }</h3>
+                  <h3 style={{ marginLeft: '10px', display: 'inline-block', fontWeight: 'bold', fontSize: '32px' }}>
+                    { charityLabel }
+                    {
+                      pledge.charity && pledge.charity.name &&
+                      <span style={{ marginLeft: '5px', fontSize: '20px' }}>
+                        ({ utils.buildEtherscanLink(pledge.charity.addr) })
+                      </span>
+                    }
+                  </h3>
                 </div>
                 <div><OwnerDisplay pledgeCreator={ pledge.creator } /> pledged <EthLogo /> { pledge.initialAmount } if we can raise <EthLogo /> { this.state.pledge.goalAmount }</div>
-                <div>Total raised so far: <EthLogo /> { pledge.raisedAmount }</div>
-                <div>Your contribution so far: <EthLogo /> { this.state.contributedAmount } </div>
+                <div>Total raised: <EthLogo /> { pledge.raisedAmount }</div>
+                <div>Your contributions: <EthLogo /> { this.state.contributedAmount } </div>
                 <div style={{ marginTop: '20px' }}>
                   {
-                    canPledgeBeEnded ?
+                    !pledge.endedAt && canPledgeBeEnded ?
                       <button onClick={ this.endPledge.bind(this) } className='btn btn-primary'>End Pledge</button>
                       : <div>Pledge ends at: { end.format('MM/DD/YYYY HH:mm:ss a') }</div>
+                  }
+                  {
+                    pledge.endedAt && wasGoalMet && !pledge.isCompleted &&
+                      <button onClick={ this.withdrawForCharity.bind(this) } className='btn btn-success'>Complete Donation to Charity</button>
+                  }
+                  {
+                    pledge.endedAt && !wasGoalMet && !pledge.isCompleted &&
+                      <button onClick={ this.withdraw.bind(this) } className='btn btn-primary'>Withdraw</button>
+                  }
+                  {
+                    pledge.isCompleted && <div className='successColor'>Pledge was completed and funds were sent to the charity</div>
                   }
                 </div>
               </div>
             </div>
             <div className='col'>
-              <ContributeForm { ...this.props } onSubmit={ this.onContributeSubmit.bind(this) } />
+              { !pledge.isCompleted && !pledge.endedAt &&
+                <ContributeForm { ...this.props } onSubmit={ this.onContributeSubmit.bind(this) } />
+              }
             </div>
           </div>
 

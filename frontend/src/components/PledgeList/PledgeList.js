@@ -28,7 +28,7 @@ class PledgeList extends Component {
       <div className='container-fluid' style={{ padding: '20px' }}>
         <div className='d-flex justify-content-center'>
           <div className={ this.state.selectedPledge ? 'hidden' : '' }>
-            <h2 style={{ fontWeight: 'bold', textAlign: 'center' }}>Contribute to an Open Pledge</h2>
+            { pledges.length ? <h2 style={{ fontWeight: 'bold', textAlign: 'center' }}>Contribute to an Open Pledge</h2> : ''}
             <div>
               {pledges.map((pledge, index) => {
                 return (

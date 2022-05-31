@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 
 const utils = {
   parsePledge(pledge) {
+    console.log(pledge);
     let parsed = {};
     parsed.id = pledge[0].toNumber();
     parsed.creator = pledge[1];
@@ -13,6 +14,7 @@ const utils = {
     parsed.endedAt = pledge[7].toNumber() || null;
     parsed.charityAddress = pledge[8];
     parsed.isVerified = pledge[9];
+    parsed.isCompleted = pledge[11];
 
     parsed.charity = null;
     if (pledge.charity && pledge.isVerified) {

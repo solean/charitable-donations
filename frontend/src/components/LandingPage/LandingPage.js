@@ -38,7 +38,7 @@ class LandingPage extends Component {
             Pledge your ETH to a good cause,<br />
             and motivate others to do the same.
           </div>
-          <div>
+          <div style={{ marginTop: '20px' }}>
             <CreatePledgeButton />
           </div>
         </div>

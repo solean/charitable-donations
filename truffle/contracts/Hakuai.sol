@@ -27,6 +27,7 @@ contract Hakuai is Ownable {
     address charityAddress;
     bool isVerified;
     Charity charity;
+    bool completed;
   }
 
 
@@ -75,7 +76,8 @@ contract Hakuai is Ownable {
       0,
       charityAddress,
       isVerified,
-      charity
+      charity,
+      false
     );
     pledges[pledgeCounter] = pledge;
     pledgeArray.push(pledge);
@@ -141,6 +143,7 @@ contract Hakuai is Ownable {
     require(pledge.endedAt != 0, "Pledge has not ended");
     require(msg.sender == addr, "Sender must be the address of the beneficiary");
     require(pledge.raisedAmount < pledge.goalAmount, "Pledge has reached goal amount, cannot withdraw. Funds are only withdrawable by the charity.");
+    require(!pledge.completed, "Donation already completed.");
 
     uint256 contributed = pledgeContributions[pledgeId][msg.sender];
     pledgeContributions[pledgeId][msg.sender] = 0;
@@ -150,14 +153,18 @@ contract Hakuai is Ownable {
   }
 
   function withdrawForCharity(uint256 pledgeId) public {
-    Pledge memory pledge = pledges[pledgeId];
+    Pledge storage pledge = pledges[pledgeId];
     require(pledge.charityAddress != address(0), "Pledge does not exist");
     require(pledge.endedAt != 0, "Pledge has not ended");
     require(pledge.raisedAmount >= pledge.goalAmount, "Pledge has not reached goal amount.");
+    require(!pledge.completed, "Donation already completed.");
 
     address payable charityAddress = payable(pledge.charityAddress);
     totalClaimedByCharities += pledge.raisedAmount;
+    // TODO: store tx?
     charityAddress.transfer(pledge.raisedAmount);
+
+    pledge.completed = true;
   }
 
   function createVerifiedCharity(string calldata name, string calldata description,

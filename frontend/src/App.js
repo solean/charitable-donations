@@ -14,12 +14,13 @@ import constants from './constants/constants';
 
 
 const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
-const contract = new ethers.Contract(constants.LOCALHOST_CONTRACT_ADDRESS, HakuaiAbi, ethersProvider);
+const contract = new ethers.Contract(constants.ROPSTEN_CONTRACT_ADDRESS, HakuaiAbi, ethersProvider);
 
 console.log(process.env.INFURA_ID)
 
-// TODO: rinkeby, remove arb
-let chainConfig = process.env.NODE_ENV === 'development' ? [chain.localhost, chain.arbitrum] : [chain.mainnet];
+let chainConfig = process.env.NODE_ENV === 'development'
+  ? [chain.localhost, chain.ropsten, chain.arbitrumRinkeby]
+  : [chain.ropsten, chain.arbitrumRinkeby];
 
 const { chains, provider } = configureChains(
   chainConfig,

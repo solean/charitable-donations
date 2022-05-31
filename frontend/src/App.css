@@ -96,7 +96,8 @@ a:hover {
   font-weight: 500;
 }
 
-.pledgeCardProgressBarContainer {
+.pledgeCardProgressBarContainer,
+.successColor {
   color: rgb(52, 199, 123);
 }
 
