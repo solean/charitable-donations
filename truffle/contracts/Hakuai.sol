@@ -96,15 +96,16 @@ contract Hakuai is Ownable {
   function contributeToPledge(uint256 pledgeId, uint256 amount) public payable {
     require(amount == msg.value && msg.value > 0, "Amount must be greater than 0");
 
-    Pledge memory pledge = pledges[pledgeId];
+    Pledge storage pledge = pledges[pledgeId];
 
     require(pledge.charityAddress != address(0), "Pledge does not exist");
     require(pledge.endedAt == 0, "Pledge has ended");
 
-    pledge.raisedAmount += amount;
-
     pledgeContributions[pledgeId][msg.sender] += amount;
     pledgesContributedTo[msg.sender].push(pledgeId);
+
+    pledge.raisedAmount += amount;
+    pledgeArray[pledgeId - 1].raisedAmount += amount;
 
     emit PledgeContribution(pledgeId, msg.sender, amount);
   }
@@ -114,14 +115,14 @@ contract Hakuai is Ownable {
   }
 
   function endPledge(uint256 pledgeId) public {
-    Pledge memory pledge = pledges[pledgeId];
+    Pledge storage pledge = pledges[pledgeId];
 
     require(pledge.charityAddress != address(0), "Pledge does not exist");
     require(pledge.endedAt == 0, "Pledge has already ended");
     require(block.timestamp >= pledge.createdAt + pledge.duration, "Pledge has not ended yet");
 
     pledge.endedAt = block.timestamp;
-    pledges[pledgeId] = pledge;
+    pledgeArray[pledgeId - 1].endedAt = block.timestamp;
 
     emit PledgeEnded(pledgeId, block.timestamp);
   }
