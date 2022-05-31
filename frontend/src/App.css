@@ -17,6 +17,7 @@
 .headerTitle {
   display: inline-block;
   color: #6512ff;
+  cursor: pointer;
 }
 
 .landing {
@@ -54,11 +55,11 @@
   box-shadow: 0 4px 5px rgba(0,0,0,0.15);
 }
 
-.a {
+a {
   color: #557EE6;
   text-decoration: none;
 }
-.a:hover {
+a:hover {
   text-decoration: underline;
 }
 

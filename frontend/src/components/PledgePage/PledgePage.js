@@ -17,13 +17,23 @@ class PledgePageInner extends Component {
   }
 
   async componentDidMount() {
+    const pledgeData = await this.loadPledgeData();
+    this.setState(pledgeData);
+  }
+  
+  async loadPledgeData() {
     const pledge = await this.props.contract.getPledge(this.props.pledgeId);
     const amountAlreadyContributed = await this.props.contract.howMuchDidIContribute(this.props.pledgeId);
 
-    this.setState({
+    return {
       pledge: utils.parsePledge(pledge),
       amountAlreadyContributed: ethers.utils.formatEther(amountAlreadyContributed)
-    });
+    };
+  }
+
+  async onContributeSubmit() {
+    const pledgeData = await this.loadPledgeData();
+    this.setState(pledgeData);
   }
 
   render() {
@@ -43,14 +53,14 @@ class PledgePageInner extends Component {
                 <div>
                   <h3 style={{ fontWeight: 'bold', fontSize: '32px' }}>{ charityLabel }</h3>
                 </div>
-                <div>{ utils.buildEtherscanLink(this.state.pledge.creator) } has pledged { this.state.pledge.initialAmount } to:</div>
+                <div>{ utils.buildEtherscanLink(this.state.pledge.creator) } has pledged <img height="14" width="14" src="/eth_logo.svg" /> { this.state.pledge.initialAmount } to:</div>
                 <div>Total raised so far: { this.state.pledge.raisedAmount } ETH</div>
                 <div>Your contribution so far: { this.state.amountAlreadyContributed } ETH</div>
               </div>
 
             </div>
             <div className='col'>
-              <ContributeForm { ...this.props } />
+              <ContributeForm { ...this.props } onSubmit={ this.onContributeSubmit.bind(this) } />
             </div>
           </div>
 
