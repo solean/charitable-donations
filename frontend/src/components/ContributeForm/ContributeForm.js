@@ -23,10 +23,10 @@ class ContributeForm extends Component {
     if (!this.state.pledgeId || !this.state.amount) {
       return false;
     }
-    this.createPledge(this.state.pledgeId, this.state.amount);
+    this.contributeToPledge(this.state.pledgeId, this.state.amount);
   }
 
-  async createPledge(pledgeId, pledgeAmount) {
+  async contributeToPledge(pledgeId, pledgeAmount) {
     let amount = ethers.utils.parseEther(pledgeAmount);
 
     try {
