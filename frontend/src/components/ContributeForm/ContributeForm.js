@@ -1,5 +1,22 @@
 import React, { Component } from 'react';
 import { ethers } from 'ethers';
+import { useAccount } from 'wagmi';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
+
+function ContributeButton(props) {
+  const { data } = useAccount();
+  return (
+    <div>
+      { 
+        data && data.address ?
+          <button className='btn btn-primary' onClick={ props.onSubmit }>Contribute</button>
+        : <ConnectButton />
+      }
+    </div>
+  );
+}
+
 
 class ContributeForm extends Component {
   constructor(props) {
@@ -59,7 +76,7 @@ class ContributeForm extends Component {
               onChange={ this.handleChange } className='form-control' id='amount' placeholder='0.00' />
           </div>
           <div>
-            <button className='btn btn-primary' onClick={ this.onSubmit.bind(this) }>Contribute</button>
+            <ContributeButton onSubmit={ this.onSubmit.bind(this) } />
           </div>
         </div>
       </div>

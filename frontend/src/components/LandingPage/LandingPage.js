@@ -1,5 +1,23 @@
 import React, { Component } from 'react';
 import CreatePledgeForm from '../CreatePledgeForm/CreatePledgeForm';
+import { useAccount } from 'wagmi';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
+
+function CreatePledgeButton() {
+  const { data } = useAccount();
+  return (
+    <div>
+      { 
+        data && data.address ?
+          <button type='button' className='btn btn-light'
+            data-bs-toggle='modal' data-bs-target='#createPledgeModal'>Create a Pledge</button>
+        : <ConnectButton />
+      }
+    </div>
+  );
+}
+
 
 class LandingPage extends Component {
   constructor(props) {
@@ -12,7 +30,6 @@ class LandingPage extends Component {
     this.props.refreshPledges && this.props.refreshPledges();
   }
 
-
   render() {
     return (
       <div>
@@ -22,8 +39,7 @@ class LandingPage extends Component {
             and motivate others to do the same.
           </div>
           <div>
-            <button type='button' className='btn btn-light'
-              data-bs-toggle='modal' data-bs-target='#createPledgeModal'>Create a Pledge</button>
+            <CreatePledgeButton />
           </div>
         </div>
 
