@@ -18,7 +18,7 @@ https://user-images.githubusercontent.com/4016993/171165703-adbf2bd7-1374-4e40-8
 
 [Higher res link](https://streamable.com/7r7wfx)
 _________
-## Frontend Deployed to [https://hakuai.vercel.app/](https://hakuai.xyz/)
+## Frontend Deployed to [hakuai.xyz](http://hakuai.xyz)
 
 ## Deployed contracts:
 > Ropsten: [0x85d5C7c03364B46ad8A10d658b2D21394e1738eF](https://ropsten.etherscan.io/address/0x85d5C7c03364B46ad8A10d658b2D21394e1738eF)
