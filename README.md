@@ -1,5 +1,5 @@
 
-# hakuai
+# hakuai 博愛
 
 This is a project I built in the last 48 hours (with a lot of coffee and not a lot of sleep) for the [ETH Shanghai hackathon](https://hackathon.ethshanghai.org/) bounty: [BUIDL For Social Good On Web3 With Infura And Truffle](https://gitcoin.co/issue/infura/eth-shanghai-2022/1/100028862).
 
@@ -25,6 +25,15 @@ _________
 
 > Arbitrum Testnet (Rinkeby): TODO (couldn't get enough rinkeby eth on arbitrum in time to deploy)
 
+_________________
+## Tech/Libraries
+- Truffle
+- Infura
+- ethersjs
+- RainbowKit and wagmi
+  - had fun playing with these for the first time
+- create-react-app
+- little bit of bootstrap
 _________________
 
 ## Future Improvements
