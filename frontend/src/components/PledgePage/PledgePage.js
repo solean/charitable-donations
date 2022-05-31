@@ -3,7 +3,22 @@ import ContributeForm from '../ContributeForm/ContributeForm';
 import { Link, useParams } from 'react-router-dom';
 import utils from '../../utils/utils';
 import { ethers } from 'ethers'
+import { useAccount } from 'wagmi';
 
+
+function EthLogo() {
+  return <img height="14" width="14" src="/eth_logo.svg" alt="ETH" />;
+}
+
+function OwnerDisplay(props) {
+  let { data } = useAccount();
+
+  return (
+    data && data.address && data.address === props.pledgeCreator ?
+      <span>You have</span>
+      : <span>{ utils.buildEtherscanLink(props.pledgeCreator) }</span>
+  );
+}
 
 class PledgePageInner extends Component {
 
@@ -39,6 +54,14 @@ class PledgePageInner extends Component {
   render() {
     let pledge = this.state.pledge;
     let charityLabel = pledge && pledge.charity ? pledge.charity.name : pledge.charityAddress;
+    let imageUrl = '';
+    if (pledge.charity && pledge.charity.imageUrl) {
+      imageUrl = pledge.charity.imageUrl;
+    } else {
+      imageUrl = '/icons8-charity-64.png';
+    }
+
+
     return (
       <div style={{ padding: '20px' }}>
         <div>
@@ -49,13 +72,14 @@ class PledgePageInner extends Component {
         <div className='container'>
           <div className='row align-items-center'>
             <div className='col'>
-              <div>
-                <div>
-                  <h3 style={{ fontWeight: 'bold', fontSize: '32px' }}>{ charityLabel }</h3>
+              <div style={{ fontWeight: '500' }}>
+                <div style={{ marginBottom: '10px' }}>
+                  <img height="64" width="64" src={ imageUrl } alt="profile" />
+                  <h3 style={{ marginLeft: '10px', display: 'inline-block', fontWeight: 'bold', fontSize: '32px' }}>{ charityLabel }</h3>
                 </div>
-                <div>{ utils.buildEtherscanLink(this.state.pledge.creator) } has pledged <img height="14" width="14" src="/eth_logo.svg" /> { this.state.pledge.initialAmount } to:</div>
-                <div>Total raised so far: { this.state.pledge.raisedAmount } ETH</div>
-                <div>Your contribution so far: { this.state.amountAlreadyContributed } ETH</div>
+                <div><OwnerDisplay pledgeCreator={ pledge.creator } /> pledged <EthLogo /> { pledge.initialAmount } if we can raise <EthLogo /> { this.state.pledge.goalAmount }</div>
+                <div>Total raised so far: <EthLogo /> { pledge.raisedAmount }</div>
+                <div>Your contribution so far: <EthLogo /> { this.state.amountAlreadyContributed }</div>
               </div>
 
             </div>
