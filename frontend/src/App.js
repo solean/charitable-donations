@@ -5,9 +5,11 @@ import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import AppContainer from './components/AppContainer/AppContainer';
+import MainPage from './components/MainPage/MainPage';
+import PledgePage from './components/PledgePage/PledgePage';
 import { ethers } from 'ethers';
 import HakuaiAbi from './abis/Hakuai.json';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 
 const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
@@ -43,16 +45,21 @@ function App() {
     <WagmiConfig client={ wagmiClient }>
       <RainbowKitProvider chains={ chains } showRecentTransactions={ true }>
         <div className="App">
-          <div style={{ margin: '10px' }}>
+          <div className='header'>
             <h1 className='headerTitle'>hakuai 博愛</h1>
             <div style={{ float: 'right' }}>
               <ConnectButton />
             </div>
           </div>
           <div>
-            <AppContainer
-              provider={ ethersProvider }
-              contract={ contract } />
+            <BrowserRouter>
+              <Routes>
+                <Route path='/'
+                  element={ <MainPage provider={ ethersProvider } contract={ contract } /> } />
+                <Route path='/pledge/:pledgeId'
+                  element={ <PledgePage provider={ ethersProvider } contract={ contract } /> } />
+              </Routes>
+            </BrowserRouter>
           </div>
         </div>
       </RainbowKitProvider>

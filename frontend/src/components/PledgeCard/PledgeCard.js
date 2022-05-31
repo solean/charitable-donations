@@ -1,21 +1,7 @@
 import React from 'react';
+import utils from '../../utils/utils';
 import '../../App.css';
 
-
-function sliceAddr(addr) {
-  if (!addr) return '';
-  return addr.slice(0, 4) + '..' + addr.slice(-4);
-}
-
-// TODO: dynamic networks
-function buildEtherscanLink(addr) {
-  let txt = sliceAddr(addr);
-  return (
-    <a href={`https://etherscan.io/address/${addr}`} target='_blank' rel='noopener noreferrer'>
-      { txt }
-    </a>
-  );
-}
 
 function PledgeCard(props) {
   const pledge = props.pledge;
@@ -32,7 +18,7 @@ function PledgeCard(props) {
   if (pledge.charity && pledge.charity.name) {
     nameLabel = pledge.charity.name;
   } else {
-    nameLabel = sliceAddr(pledge.charityAddress);
+    nameLabel = utils.sliceAddr(pledge.charityAddress);
   }
 
   return (
@@ -46,7 +32,7 @@ function PledgeCard(props) {
             <div>{ nameLabel }</div>
           </div>
           <div className='pledgeAmounts'>
-            { buildEtherscanLink(pledge.creator) } pledged
+            { utils.buildEtherscanLink(pledge.creator) } pledged
             <span className='ethAmount'>
               <img src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg" height="14" width="14" alt="ETH" />
               { pledge.initialAmount }

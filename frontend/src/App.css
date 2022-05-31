@@ -7,6 +7,13 @@
   display: none;
 }
 
+.header {
+  padding: 10px;
+  -webkit-box-shadow: 0px 0px 9px 3px rgba(41,41,41,.25);
+  -moz-box-shadow: 0px 0px 9px 3px rgba(41,41,41,.25);
+  box-shadow: 0px 0px 9px 3px rgba(41,41,41,.25);
+}
+
 .headerTitle {
   display: inline-block;
   color: #6512ff;
@@ -47,11 +54,11 @@
   box-shadow: 0 4px 5px rgba(0,0,0,0.15);
 }
 
-.pledgeCard a {
+.a {
   color: #557EE6;
   text-decoration: none;
 }
-.pledgeCard a:hover {
+.a:hover {
   text-decoration: underline;
 }
 

@@ -1,53 +1,45 @@
 import React, { Component } from 'react';
-import PledgeCard from '../PledgeCard.js/PledgeCard';
-import { ethers } from 'ethers';
+import PledgeCard from '../PledgeCard/PledgeCard';
+import { Navigate } from 'react-router-dom';
+import utils from '../../utils/utils';
 
 class PledgeList extends Component {
+  constructor(props) {
+    super(props);
 
-  parsePledge(pledge) {
-    let parsed = {};
-    parsed.id = pledge[0].toNumber();
-    parsed.creator = pledge[1];
-    parsed.createdAt = pledge[2].toNumber();
-    parsed.initialAmount = ethers.utils.formatEther(pledge[3]);
-    parsed.goalAmount = ethers.utils.formatEther(pledge[4]);
-    parsed.raisedAmount = ethers.utils.formatEther(pledge[5]);
-    parsed.duration = pledge[6].toNumber();
-    parsed.endedAt = pledge[7].toNumber() || null;
-    parsed.charityAddress = pledge[8];
-    parsed.isVerified = pledge[9];
+    this.state = {
+      selectedPledge: null
+    };
+  }
 
-    parsed.charity = null;
-    if (pledge.charity && pledge.isVerified) {
-      parsed.charity = {
-        addr: pledge.charity[0],
-        name: pledge.charity[1],
-        description: pledge.charity[2],
-        websiteUrl: pledge.charity[3],
-        imageUrl: pledge.charity[4]
-      };
-    }
-
-    console.log(parsed);
-    return parsed;
+  onPledgeClick(pledge) {
+    console.log(pledge);
+    this.setState({
+      selectedPledge: pledge
+    });
   }
 
   render() {
     let pledges = this.props.pledges || [];
-    pledges = pledges.map(pledge => this.parsePledge(pledge));
+    pledges = pledges.map(pledge => utils.parsePledge(pledge));
     pledges.reverse();
 
     return (
       <div className='container-fluid' style={{ padding: '20px' }}>
         <div className='d-flex justify-content-center'>
-          <div>
+          <div className={ this.state.selectedPledge ? 'hidden' : '' }>
             <h2 style={{ fontWeight: 'bold', textAlign: 'center' }}>Contribute to an Open Pledge</h2>
             <div>
               {pledges.map((pledge, index) => {
-                return <PledgeCard key={index} pledge={pledge} />
+                return (
+                  <div key={ index } onClick={ this.onPledgeClick.bind(this, pledge) }>
+                    <PledgeCard pledge={pledge} />
+                  </div>
+                )
               })}
             </div>
           </div>
+          { this.state.selectedPledge && <Navigate to={ '/pledge/' + this.state.selectedPledge.id } /> }
         </div>
       </div>
     );

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import LandingPage from '../LandingPage/LandingPage';
 import PledgeList from '../PledgeList/PledgeList';
 
-class AppContainer extends Component {
+class MainPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,4 +34,4 @@ class AppContainer extends Component {
   }
 }
 
-export default AppContainer;
+export default MainPage;
