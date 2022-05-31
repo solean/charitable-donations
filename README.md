@@ -11,7 +11,13 @@ After the fundraising period ends, any user may call the function (press the but
 
 I liked the idea of an initial pledge to create momentum for other contributors to pile in to meet the fundraising goal. However, I think there's a lot of room for improvement for incentivizing donations.
 
-_________________
+________
+## Quick demo video
+
+https://user-images.githubusercontent.com/4016993/171165703-adbf2bd7-1374-4e40-82c8-a3bab7e61ba2.mp4
+
+[Higher res link](https://streamable.com/7r7wfx)
+_________
 
 ## Deployed contracts:
 > Ropsten: [0x85d5C7c03364B46ad8A10d658b2D21394e1738eF](https://ropsten.etherscan.io/address/0x85d5C7c03364B46ad8A10d658b2D21394e1738eF)
