@@ -9,11 +9,12 @@ import MainPage from './components/MainPage/MainPage';
 import PledgePage from './components/PledgePage/PledgePage';
 import { ethers } from 'ethers';
 import HakuaiAbi from './abis/Hakuai.json';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import constants from './constants/constants';
 
 
 const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
-const contract = new ethers.Contract('0x77fcA3DD3B6d1884709dede12F9AF44060455970', HakuaiAbi, ethersProvider);
+const contract = new ethers.Contract(constants.LOCALHOST_CONTRACT_ADDRESS, HakuaiAbi, ethersProvider);
 
 console.log(process.env.INFURA_ID)
 
@@ -46,6 +47,7 @@ function App() {
       <RainbowKitProvider chains={ chains } showRecentTransactions={ true }>
         <div className="App">
           <div className='header'>
+            <img src="/Hakuai.png" height="50" width="50" alt="logo" style={{ float: 'left' }} />
             <h1 className='headerTitle' onClick={ () => window.location.reload() }>hakuai 博愛</h1>
             <div style={{ float: 'right' }}>
               <ConnectButton />

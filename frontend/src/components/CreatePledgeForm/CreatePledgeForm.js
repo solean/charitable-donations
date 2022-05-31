@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Select from 'react-select'
 import { ethers } from 'ethers';
 
 
@@ -10,11 +11,26 @@ class CreatePledgeForm extends Component {
       goalAmount: '',
       duration: '',
       charityAddress: '',
-      errorMessage: ''
+      errorMessage: '',
+      addressToggle: '',
+      verifiedCharitiesOptions: [],
+      selectedVerified: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  async componentDidMount() {
+      let data = await this.props.contract.getVerifiedCharities();
+
+      let options = data.map(c => {
+        return { value: c.addr, label: c.name };
+      });
+
+      this.setState({
+        verifiedCharitiesOptions: options
+      })
   }
 
   handleChange(e) {
@@ -26,7 +42,13 @@ class CreatePledgeForm extends Component {
   handleSubmit() {
     let state = this.state;
 
-    if (!state.initialPledge || !state.goalAmount || !state.duration || !state.charityAddress) {
+    if (!state.initialPledge || !state.goalAmount || !state.duration || !state.addressToggle) {
+      return false;
+    }
+    if (state.addressToggle.value === 'V' && !state.selectedVerified) {
+      return false;
+    }
+    if (state.addressToggle.value === 'C' && !state.charityAddress) {
       return false;
     }
     console.log(state);
@@ -37,9 +59,13 @@ class CreatePledgeForm extends Component {
   async createPledge(state) {
     let initialPledge = ethers.utils.parseEther(state.initialPledge);
     let goalAmount = ethers.utils.parseEther(state.goalAmount);
-    // TODO:
-    // let days = duration;
-    let duration = 3600000;
+    let duration = state.duration * 86400000;
+    let address = '';
+    if (state.addressToggle.value === 'V') {
+      address = state.selectedVerified.value;
+    } else if (state.addressToggle.value === 'C') {
+      address = state.charityAddress;
+    }
 
     try {
       let contract = this.props.contract.connect(this.props.provider.getSigner());
@@ -47,7 +73,7 @@ class CreatePledgeForm extends Component {
         initialPledge,
         goalAmount,
         duration,
-        state.charityAddress,
+        address,
         {
           value: ethers.utils.parseEther(state.initialPledge)
         }
@@ -85,11 +111,27 @@ class CreatePledgeForm extends Component {
             <input name='duration' type='number' value={ this.state.duration }
               onChange={ this.handleChange } className='form-control' id='duration' placeholder='0' />
           </div>
+          <div className='alert alert-info'>Choose a Verified Nonprofit, or use a custom address.</div>
           <div className='mb-3'>
-            <label htmlFor='charityAddress' className='form-label'>Donation Address</label>
-            <input name='charityAddress' type='text' value={ this.state.charityAddress }
-              onChange={ this.handleChange } className='form-control' id='charityAddress' placeholder='0x' />
+            <Select value={ this.state.addressToggle } onChange={ o => this.setState({ addressToggle: o })} options={[
+              { value: 'V', label: 'Verified Nonprofit' },
+              { value: 'C', label: 'Custom Address' }
+            ]} />
           </div>
+          {
+            this.state.addressToggle && this.state.addressToggle.value === 'V' &&
+            <div>
+              <Select value={ this.state.selectedVerified } onChange={ o => this.setState({ selectedVerified: o  })}
+                options={ this.state.verifiedCharitiesOptions } />
+            </div>
+          }
+          {
+            this.state.addressToggle && this.state.addressToggle.value === 'C' &&
+            <div className='mb-3'>
+              <input name='charityAddress' type='text' value={ this.state.charityAddress }
+                onChange={ this.handleChange } className='form-control' id='charityAddress' placeholder='0x' />
+            </div>
+          }
         </div>
         <div style={{ marginTop: '40px' }}>
           <button onClick={ this.handleSubmit } type="button" className="btn btn-primary">Submit</button>

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -34,6 +35,7 @@ contract Hakuai is Ownable {
   mapping (uint256 => Pledge) public pledges;
   Pledge[] pledgeArray;
   mapping (address => uint256[]) public pledgesContributedTo;
+  mapping (address => uint256[]) public pledgesCreated;
   mapping (uint256 => mapping (address => uint256)) pledgeContributions;
   mapping (address => Charity) public verifiedCharities;
   Charity[] verifiedCharityArray;
@@ -54,6 +56,7 @@ contract Hakuai is Ownable {
     require(goalAmount > initialPledge, "Goal amount must be greater than the initial pledge");
     require(duration >= 3600000, "Duration must be at least 1 hour");
     require(charityAddress != address(0), "Charity address cannot be 0");
+    require(charityAddress != msg.sender, "Charity address cannot be your own address");
 
     bool isVerified = false;
     Charity memory charity = verifiedCharities[charityAddress];
@@ -79,6 +82,7 @@ contract Hakuai is Ownable {
 
     pledgeContributions[pledgeCounter][msg.sender] = initialPledge;
     pledgesContributedTo[msg.sender].push(pledgeCounter);
+    pledgesCreated[msg.sender].push(pledgeCounter);
 
     pledgeCounter++;
 
@@ -114,12 +118,16 @@ contract Hakuai is Ownable {
     return pledgeContributions[pledgeId][msg.sender];
   }
 
+  function howMuchDidContribute(uint256 pledgeId, address addr) public view returns (uint256) {
+    return pledgeContributions[pledgeId][addr];
+  }
+
   function endPledge(uint256 pledgeId) public {
     Pledge storage pledge = pledges[pledgeId];
 
     require(pledge.charityAddress != address(0), "Pledge does not exist");
     require(pledge.endedAt == 0, "Pledge has already ended");
-    require(block.timestamp >= pledge.createdAt + pledge.duration, "Pledge has not ended yet");
+    // require(block.timestamp >= pledge.createdAt + pledge.duration, "Pledge has not ended yet");
 
     pledge.endedAt = block.timestamp;
     pledgeArray[pledgeId - 1].endedAt = block.timestamp;
@@ -167,6 +175,7 @@ contract Hakuai is Ownable {
       imageUrl
     );
     verifiedCharities[addr] = charity;
+    verifiedCharityArray.push(charity);
 
     emit CharityCreated(addr, name, websiteUrl, imageUrl);
   }

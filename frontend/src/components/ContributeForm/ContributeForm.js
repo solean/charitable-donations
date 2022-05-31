@@ -68,7 +68,8 @@ class ContributeForm extends Component {
   render() {
     return(
       <div>
-        <h1>Contribute</h1>
+        <h2>Contribute</h2>
+        <div className='alert alert-info'>If the pledge goal is met by the end of the fundraising period, your pledged Ether will be sent to the charity's address, otherwise you will be able to withdraw it after the pledge has been ended.</div>
         <div>
           <div className='mb-3'>
             <label htmlFor='amount' className='form-label'>Amount of Ether to Contribute</label>
