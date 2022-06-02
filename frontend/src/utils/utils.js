@@ -2,7 +2,6 @@ import { ethers } from 'ethers';
 
 const utils = {
   parsePledge(pledge) {
-    console.log(pledge);
     let parsed = {};
     parsed.id = pledge[0].toNumber();
     parsed.creator = pledge[1];

@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import useContract from '../../hooks/useContract';
 
 
 function ContributeButton(props) {
@@ -18,37 +19,22 @@ function ContributeButton(props) {
 }
 
 
-class ContributeForm extends Component {
-  constructor(props) {
-    super(props);
+function ContributeForm(props) {
+  const [amount, setAmount] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
+  const contract = useContract();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-    this.state = {
-      pledgeId: props.pledgeId,
-      amount: ''
-    };
+  const handleChange = e => {
+    setAmount(e.target.value);
+  };
 
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(e) {
-    this.setState({
-      amount: e.target.value
-    });
-  }
-
-  onSubmit() {
-    if (!this.state.pledgeId || !this.state.amount) {
-      return false;
-    }
-    this.contributeToPledge(this.state.pledgeId, this.state.amount);
-  }
-
-  async contributeToPledge(pledgeId, pledgeAmount) {
+  const contributeToPledge = async (pledgeId, pledgeAmount) => {
     let amount = ethers.utils.parseEther(pledgeAmount);
 
     try {
-      let contract = this.props.contract.connect(this.props.provider.getSigner());
-      let tx = await contract.contributeToPledge(
+      let signedContract = contract.connect(provider.getSigner());
+      let tx = await signedContract.contributeToPledge(
         pledgeId,
         amount,
         {
@@ -57,32 +43,41 @@ class ContributeForm extends Component {
       );
       console.log(tx);
       await tx.wait();
-      this.props.onSubmit && this.props.onSubmit();
+      props.onSubmit && props.onSubmit();
     } catch (e) {
       console.error(e);
       let errorMessage = (e && e.data && e.data.message) || 'Sorry, something went wrong.';
-      this.setState({ errorMessage });
+      setErrorMessage(errorMessage);
     }
-  }
+  };
 
-  render() {
-    return(
+  const onSubmit = () => {
+    setErrorMessage('')
+
+    if (!props.pledgeId || !amount) {
+      setErrorMessage('Please enter an amount greater than 0.');
+      return false;
+    }
+    contributeToPledge(props.pledgeId, amount);
+  };
+
+  return(
+    <div>
+      <h2>Contribute</h2>
+      <div className={ errorMessage ? 'alert alert-danger' : 'hidden' }>{ errorMessage }</div>
+      <div className='alert alert-info'>If the pledge goal is met by the end of the fundraising period, your pledged Ether will be sent to the charity's address, otherwise you will be able to withdraw it after the pledge has been ended.</div>
       <div>
-        <h2>Contribute</h2>
-        <div className='alert alert-info'>If the pledge goal is met by the end of the fundraising period, your pledged Ether will be sent to the charity's address, otherwise you will be able to withdraw it after the pledge has been ended.</div>
+        <div className='mb-3'>
+          <label htmlFor='amount' className='form-label'>Amount of Ether to Contribute</label>
+          <input name='amount' type='number' value={ amount }
+            onChange={ handleChange } className='form-control' id='amount' placeholder='0.00' />
+        </div>
         <div>
-          <div className='mb-3'>
-            <label htmlFor='amount' className='form-label'>Amount of Ether to Contribute</label>
-            <input name='amount' type='number' value={ this.state.amount }
-              onChange={ this.handleChange } className='form-control' id='amount' placeholder='0.00' />
-          </div>
-          <div>
-            <ContributeButton onSubmit={ this.onSubmit.bind(this) } />
-          </div>
+          <ContributeButton onSubmit={ onSubmit } />
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default ContributeForm;

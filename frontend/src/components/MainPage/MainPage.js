@@ -1,37 +1,27 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import LandingPage from '../LandingPage/LandingPage';
 import PledgeList from '../PledgeList/PledgeList';
+import useContract from  '../../hooks/useContract';
 
-class MainPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      pledges: []
-    };
 
-    this.refreshPledges = this.refreshPledges.bind(this);
+function MainPage() {
+  const [pledges, setPledges] = useState([]);
+  const contract = useContract();
+
+  const fetchPledges = async () => {
+    setPledges(await contract.getPledges());
   }
 
-  componentDidMount() {
-    this.refreshPledges();
-  }
+  useEffect(() => {
+    fetchPledges().catch(console.error);
+  });
 
-  async refreshPledges() {
-    const pledges = await this.props.contract.getPledges();
-    this.setState({ pledges });
-  }
-  
-  render() {
-    return(
-      <div>
-        <LandingPage
-          refreshPledges={ this.refreshPledges }
-          provider={ this.props.provider }
-          contract={ this.props.contract } />
-        <PledgeList pledges={ this.state.pledges } />
-      </div>
-    );
-  }
+  return(
+    <div>
+      <LandingPage refreshPledges={ fetchPledges } />
+      <PledgeList pledges={ pledges } />
+    </div>
+  );
 }
 
 export default MainPage;

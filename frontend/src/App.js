@@ -7,20 +7,14 @@ import { publicProvider } from 'wagmi/providers/public';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import MainPage from './components/MainPage/MainPage';
 import PledgePage from './components/PledgePage/PledgePage';
-import { ethers } from 'ethers';
-import HakuaiAbi from './abis/Hakuai.json';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import constants from './constants/constants';
 
-
-const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
-const contract = new ethers.Contract(constants.ROPSTEN_CONTRACT_ADDRESS, HakuaiAbi, ethersProvider);
 
 console.log(process.env.INFURA_ID)
 
 let chainConfig = process.env.NODE_ENV === 'development'
   ? [chain.localhost, chain.ropsten, chain.arbitrumRinkeby]
-  : [chain.ropsten, chain.arbitrumRinkeby];
+  : [chain.arbitrumRinkeby, chain.ropsten];
 
 const { chains, provider } = configureChains(
   chainConfig,
@@ -57,10 +51,8 @@ function App() {
           <div>
             <BrowserRouter>
               <Routes>
-                <Route path='/'
-                  element={ <MainPage provider={ ethersProvider } contract={ contract } /> } />
-                <Route path='/pledge/:pledgeId'
-                  element={ <PledgePage provider={ ethersProvider } contract={ contract } /> } />
+                <Route path='/' element={ <MainPage /> } />
+                <Route path='/pledge/:pledgeId' element={ <PledgePage /> } />
               </Routes>
             </BrowserRouter>
           </div>
