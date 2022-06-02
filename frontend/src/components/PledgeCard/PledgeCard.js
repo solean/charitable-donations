@@ -1,10 +1,12 @@
 import React from 'react';
+import { useNetwork } from 'wagmi';
 import utils from '../../utils/utils';
 import '../../App.css';
 
 
 function PledgeCard(props) {
   const pledge = props.pledge;
+  const { activeChain } = useNetwork();
 
   let percentageRaised = parseFloat(pledge.raisedAmount) / parseFloat(pledge.goalAmount);
 
@@ -32,7 +34,7 @@ function PledgeCard(props) {
             <div>{ nameLabel }</div>
           </div>
           <div className='pledgeAmounts'>
-            { utils.buildEtherscanLink(pledge.creator) } pledged
+            { utils.buildEtherscanLink(pledge.creator, activeChain) } pledged
             <span className='ethAmount'>
               <img src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg" height="14" width="14" alt="ETH" />
               { pledge.initialAmount }

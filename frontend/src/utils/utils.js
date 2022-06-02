@@ -34,10 +34,18 @@ const utils = {
     return addr.slice(0, 4) + '..' + addr.slice(-4);
   },
 
-  buildEtherscanLink: function(addr, network) {
+  buildEtherscanLink: function(addr, activeChain) {
     let txt = this.sliceAddr(addr);
+
+    let explorer = 'etherscan.io'
+    if (activeChain && activeChain.id === 3) {
+      explorer = 'ropsten.etherscan.io';
+    } else if (activeChain && activeChain.id === 421611) {
+      explorer = 'testnet.arbiscan.io';
+    }
+
     return (
-      <a href={`https://etherscan.io/address/${addr}`} target='_blank' rel='noopener noreferrer'>
+      <a href={`https://${explorer}/address/${addr}`} target='_blank' rel='noopener noreferrer'>
         { txt }
       </a>
     );

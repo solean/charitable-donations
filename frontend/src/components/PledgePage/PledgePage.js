@@ -3,7 +3,7 @@ import ContributeForm from '../ContributeForm/ContributeForm';
 import { Link, useParams } from 'react-router-dom';
 import utils from '../../utils/utils';
 import { ethers } from 'ethers'
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import moment from 'moment';
 import useContract from '../../hooks/useContract';
 
@@ -14,17 +14,19 @@ function EthLogo() {
 
 function OwnerDisplay(props) {
   let { data } = useAccount();
+  const { activeChain } = useNetwork();
 
   return (
     data && data.address && data.address === props.pledgeCreator ?
       <span>You have</span>
-      : <span>{ utils.buildEtherscanLink(props.pledgeCreator) }</span>
+      : <span>{ utils.buildEtherscanLink(props.pledgeCreator, activeChain) }</span>
   );
 }
 
 function PledgePageInner(props) {
   const [pledge, setPledge] = useState({});
   const [contributedAmount, setContributedAmount] = useState(0);
+  const { activeChain } = useNetwork();
   const contract = useContract();
   const provider = new ethers.providers.Web3Provider(window.ethereum);
  
@@ -135,11 +137,11 @@ function PledgePageInner(props) {
               <div style={{ marginBottom: '10px' }}>
                 <img height="64" width="64" src={ imageUrl } alt="profile" />
                 <h3 style={{ marginLeft: '10px', display: 'inline-block', fontWeight: 'bold', fontSize: '32px' }}>
-                  { charityLabel }
+                  { pledge.isVerified ? charityLabel : utils.buildEtherscanLink(pledge.charityAddress, activeChain) }
                   {
                     pledge.charity && pledge.charity.name &&
                     <span style={{ marginLeft: '5px', fontSize: '20px' }}>
-                      ({ utils.buildEtherscanLink(pledge.charity.addr) })
+                      ({ utils.buildEtherscanLink(pledge.charity.addr, activeChain) })
                     </span>
                   }
                 </h3>
