@@ -18,10 +18,9 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
-//
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const fs = require('fs');
+const testnetPrivateKey = fs.readFileSync(".testnetPrivateKey").toString().trim();
 
 module.exports = {
   /**
@@ -46,6 +45,14 @@ module.exports = {
       port: 8545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
     },
+
+    arbitrum_testnet: {
+      provider: function() {
+        return new HDWalletProvider(testnetPrivateKey, 'https://rinkeby.arbitrum.io/rpc')
+      },
+      network_id: 421611
+    },
+
     //
     // An additional network, but with some advanced options…
     // advanced: {

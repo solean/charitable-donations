@@ -30,7 +30,9 @@
 
   "devDependencies": {
 
-    "@openzeppelin/contracts": "^4.6.0"
+    "@openzeppelin/contracts": "^4.6.0",
+
+    "arb-ethers-web3-bridge": "^0.7.3"
 
   }
 
