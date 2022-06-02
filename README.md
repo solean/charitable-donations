@@ -23,7 +23,7 @@ _________
 ## Deployed contracts:
 > Ropsten: [0x85d5C7c03364B46ad8A10d658b2D21394e1738eF](https://ropsten.etherscan.io/address/0x85d5C7c03364B46ad8A10d658b2D21394e1738eF)
 
-> Arbitrum Testnet (Rinkeby): TODO (couldn't get enough rinkeby eth on arbitrum in time to deploy)
+> Arbitrum Testnet (Rinkeby): [0x6670dC24C90dA688160DD3ac8878F3Fe3C1C0D08](https://testnet.arbiscan.io/address/0x6670dC24C90dA688160DD3ac8878F3Fe3C1C0D08)
 
 _________________
 ## Tech/Libraries
