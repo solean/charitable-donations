@@ -21,9 +21,7 @@ _________
 ## Frontend Deployed to [hakuai.xyz](http://hakuai.xyz)
 
 ## Deployed contracts:
-> Ropsten: [0x85d5C7c03364B46ad8A10d658b2D21394e1738eF](https://ropsten.etherscan.io/address/0x85d5C7c03364B46ad8A10d658b2D21394e1738eF)
-
-> Arbitrum Testnet (Rinkeby): [0x6670dC24C90dA688160DD3ac8878F3Fe3C1C0D08](https://testnet.arbiscan.io/address/0x6670dC24C90dA688160DD3ac8878F3Fe3C1C0D08)
+> Goerli: [0x420Cf412f62176441D1E7e9B190e1A233Ac6fEf9](https://goerli.etherscan.io/address/0x420Cf412f62176441D1E7e9B190e1A233Ac6fEf9)
 
 _________________
 ## Tech/Libraries

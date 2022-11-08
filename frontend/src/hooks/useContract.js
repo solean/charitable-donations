@@ -11,8 +11,8 @@ function useContract() {
   }
 
   let contractAddr = '';
-  if (activeChain.id === 3) {
-    contractAddr = constants.ROPSTEN_CONTRACT_ADDRESS;
+  if (activeChain.id === 5) {
+    contractAddr = constants.GOERLI_CONTRACT_ADDRESS;
   } else if (activeChain.id === 421611) {
     contractAddr = constants.ARBITRUM_TESTNET_CONTRACT_ADDRESS;
   }

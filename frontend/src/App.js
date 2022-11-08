@@ -13,8 +13,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 console.log(process.env.INFURA_ID)
 
 let chainConfig = process.env.NODE_ENV === 'development'
-  ? [chain.localhost, chain.ropsten, chain.arbitrumRinkeby]
-  : [chain.arbitrumRinkeby, chain.ropsten];
+  ? [chain.localhost, chain.goerli]
+  : [chain.goerli];
 
 const { chains, provider } = configureChains(
   chainConfig,

@@ -46,13 +46,6 @@ module.exports = {
       network_id: "*",       // Any network (default: none)
     },
 
-    arbitrum_testnet: {
-      provider: function() {
-        return new HDWalletProvider(testnetPrivateKey, 'https://rinkeby.arbitrum.io/rpc')
-      },
-      network_id: 421611
-    },
-
     //
     // An additional network, but with some advanced options…
     // advanced: {
